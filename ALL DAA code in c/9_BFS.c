@@ -1,46 +1,69 @@
-#include <stdio.h>
-#define SIZE 100
+#include <iostream>
+using namespace std;
 
-int queue[SIZE], front = -1, rear = -1;
+#define MAX 100
 
-void enqueue(int v) {
-    if (rear == SIZE - 1) return;
-    if (front == -1) front = 0;
-    queue[++rear] = v;
-}
+// BFS function
+void bfs(int adj[MAX][MAX], int V, int start) {
+    int visited[MAX] = {0};
+    int queue[MAX];
+    int front = 0, rear = 0;
 
-int dequeue() {
-    if (front == -1 || front > rear) return -1;
-    return queue[front++];
-}
-
-int isEmpty() {
-    return front == -1 || front > rear;
-}
-
-void BFS(int graph[10][10], int n, int start) {
-    int visited[10] = {0};
-    enqueue(start);
     visited[start] = 1;
-    while (!isEmpty()) {
-        int node = dequeue();
-        printf("%d ", node);
-        for (int i = 0; i < n; i++) {
-            if (graph[node][i] && !visited[i]) {
-                enqueue(i);
+    queue[rear++] = start;
+
+    cout << "BFS Traversal: ";
+    while (front < rear) {
+        int node = queue[front++];
+        cout << node << " ";
+
+        for (int i = 0; i < V; i++) {
+            if (adj[node][i] == 1 && !visited[i]) {
                 visited[i] = 1;
+                queue[rear++] = i;
             }
+        }
+    }
+    cout << endl;
+}
+
+// DFS helper function (recursive)
+void dfsHelper(int adj[MAX][MAX], int visited[MAX], int V, int node) {
+    visited[node] = 1;
+    cout << node << " ";
+    for (int i = 0; i < V; i++) {
+        if (adj[node][i] == 1 && !visited[i]) {
+            dfsHelper(adj, visited, V, i);
         }
     }
 }
 
+// DFS function
+void dfs(int adj[MAX][MAX], int V, int start) {
+    int visited[MAX] = {0};
+    cout << "DFS Traversal: ";
+    dfsHelper(adj, visited, V, start);
+    cout << endl;
+}
+
 int main() {
-    int graph[10][10] = {
-        {0,1,1,0},
-        {1,0,1,1},
-        {1,1,0,1},
-        {0,1,1,0}
-    };
-    BFS(graph, 4, 0);
+    int V;
+    cout << "Enter number of vertices: ";
+    cin >> V;
+
+    int adj[MAX][MAX];
+
+    cout << "Enter adjacency matrix (0/1):\n";
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            cin >> adj[i][j];
+
+    int start;
+    cout << "Enter starting vertex: ";
+    cin >> start;
+
+    bfs(adj, V, start);
+    dfs(adj, V, start);
+
     return 0;
 }

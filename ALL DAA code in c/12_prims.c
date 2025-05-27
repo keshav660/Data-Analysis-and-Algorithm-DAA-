@@ -1,17 +1,11 @@
 #include <stdio.h>
-
 #define INF 999
-
 void prim(int n, int cost[10][10]) {
     int selected[10] = {0}, i, j, u, v, min, edges = 0;
-
-    selected[0] = 1;  // Start from vertex 0
-
+    selected[0] = 1; 
     printf("\nEdges in Minimum Spanning Tree:\n");
-
     while (edges < n - 1) {
         min = INF;
-
         for (i = 0; i < n; i++) {
             if (selected[i]) {
                 for (j = 0; j < n; j++) {
@@ -23,13 +17,11 @@ void prim(int n, int cost[10][10]) {
                 }
             }
         }
-
         printf("%d - %d : %d\n", u, v, cost[u][v]);
         selected[v] = 1;
         edges++;
     }
 }
-
 int main() {
     int n, i, j, cost[10][10];
 

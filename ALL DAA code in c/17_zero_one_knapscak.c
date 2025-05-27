@@ -1,26 +1,49 @@
+
+
 #include <stdio.h>
 
 int max(int a, int b) {
-    return a > b ? a : b;
+    return (a > b) ? a : b;
 }
 
-int main() {
-    int w[] = {2, 3, 4, 5};
-    int v[] = {3, 4, 5, 6};
-    int W = 5, n = 4;
-    int K[10][10];
+// 0/1 Knapsack function using DP
+int knapsack01(int W, int wt[], int val[], int n) {
+    int dp[100][100];
 
     for (int i = 0; i <= n; i++) {
-        for (int j = 0; j <= W; j++) {
-            if (i == 0 || j == 0)
-                K[i][j] = 0;
-            else if (w[i - 1] <= j)
-                K[i][j] = max(v[i - 1] + K[i - 1][j - w[i - 1]], K[i - 1][j]);
+        for (int w = 0; w <= W; w++) {
+            if (i == 0 || w == 0)
+                dp[i][w] = 0;
+            else if (wt[i - 1] <= w)
+                dp[i][w] = max(val[i - 1] + dp[i - 1][w - wt[i - 1]], dp[i - 1][w]);
             else
-                K[i][j] = K[i - 1][j];
+                dp[i][w] = dp[i - 1][w];
         }
     }
 
-    printf("Maximum value = %d\n", K[n][W]);
+    return dp[n][W];
+}
+
+int main() {
+    int n, W;
+    int val[100], wt[100];
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+
+    printf("Enter values of items:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &val[i]);
+
+    printf("Enter weights of items:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &wt[i]);
+
+    printf("Enter capacity of knapsack: ");
+    scanf("%d", &W);
+
+    int maxVal = knapsack01(W, wt, val, n);
+    printf("Maximum value in 0/1 Knapsack = %d\n", maxVal);
+
     return 0;
 }
